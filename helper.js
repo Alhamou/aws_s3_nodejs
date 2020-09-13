@@ -56,7 +56,7 @@ module.exports =  (function(){
 
 
     /**
-     * handeling uplaod to the locsl server
+     * handeling uplaod to the local server
      * then resizing all images 
      * @param {Images} i 
      */
@@ -91,14 +91,14 @@ module.exports =  (function(){
 
 
     /**
-     * formating name of source images.
+     * formating name image.
      * @param {source Name} name 
      */
     obj.fileName = function(name){
         return encodeURIComponent(name.replace(/&. *;+/gm, '_').replace(/-/gm, '_'));
     }
 
-        /**
+     /**
      * set Date as string yyyy-mm-dd.
      */
     obj.date = function(){
