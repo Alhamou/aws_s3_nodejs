@@ -60,27 +60,27 @@ module.exports =  (function(){
      * then resizing all images 
      * @param {Images} i 
      */
-    obj.sendImages = function(i, px){
+    obj.sendImages = function(file, px){
 
-
-        let size = imageSize(i.path).width > px || imageSize(i.path).height > px ? px : null; 
+        
+        let size = imageSize(file.path).width > px || imageSize(file.path).height > px ? px : null; 
 
         return new Promise(function(resolve, reject){
 
-            sharp(i.path)
+            sharp(file.path)
                 .resize(size)
-                .toFile( "upload/" + i.name , async (err, info) => {
+                .toFile( "upload/" + file.name , async (err, info) => {
                     if (err) {
                         reject(err)
                         
                     }
 
-                    const awsResponse = await obj.uplaod("upload/" + i.name, i.name)
+                    const awsResponse = await obj.uplaod("upload/" + file.name, file.name)
 
 
                     resolve(awsResponse)
 
-                    fs.unlinkSync(i.path)
+                    fs.unlinkSync(file.path)
 
                     
                 });
@@ -112,6 +112,34 @@ module.exports =  (function(){
         if (day.length < 2) 
             day = '0' + day;
             return [year, month, day].join('_');
+    }
+
+
+
+    obj.checkFileType = function(file){
+
+
+        const type = file.type.split("/").pop();
+
+        const validTypes = ["png", "jpeg", "gif", "jpg", "webp", "pdf"];
+
+        if(validTypes.indexOf(type) == -1){
+    
+            console.log("The File type in invalid");
+            
+            console.log("The file upload faild, trying to remove the temp file..")
+
+            // delete file that does not uploaded.
+            try {fs.unlinkSync(file.path)} catch {console.log("can't delete the old file upload, after failed: " + file.path) }
+
+
+            return false;
+    
+        }
+    
+        return true;
+
+
     }
     return obj;
 })()

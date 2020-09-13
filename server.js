@@ -1,6 +1,6 @@
 const express = require("express");
-const AWSAPI = require("./helper");
-
+const aws_controller = require("./helper");
+const fs = require("fs");
 const app = express();
 const formidable = require("formidable");
 
@@ -15,43 +15,40 @@ app.post("/",  function(req,res){
     const form = formidable({ multiples: true, uploadDir : 'upload/'});
          
 
-    let files = [];
-    const aws_images_url = [];
-
-    form.on("fileBegin", function(name, file) {
-                
-        let local_name = AWSAPI.fileName(file.name);
-
-        files.push({ path: file.path, name : local_name});
-
-    });
+    const files = [];
+    const url_images = [];
 
 
+    form.on("file", async function(name, file) {
+
+
+        if(aws_controller.checkFileType(file)){
+            let local_name = aws_controller.fileName(file.name);
+
+            files.push({ path: file.path, name : local_name});
+        }
+
+
+    })
 
     form.on("end", async function() {
 
-        
-        for(let i of files){
-        
+        try{
 
-            try{
+            for(let i of files){
 
-                const sendImages = await AWSAPI.sendImages(i, 900)
+                const sendImages = await aws_controller.sendImages(i, 900);
 
-                aws_images_url.push(sendImages)
+                url_images.push(sendImages);
 
-                
-            } catch (error) {
-                
-                return res.send({ status: 'error', message : error});
-
+                res.json(url_images);
             }
+
+        } catch (error) {
+            console.log(error);
+            return res.send({ status: 'error', message : error});
+        }
             
-                
-        } 
-        
-        res.json(aws_images_url);
-        
         
     })
 
