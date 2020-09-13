@@ -32,7 +32,7 @@ module.exports =  (function(){
             // Setting up S3 upload parameters
             const params = {
                 Bucket: process.env.BUCKET,
-                Key: "template_1/" + fileName,
+                Key: "images_v1/" + fileName,
                 Body: fileContent,
                 ACL:'public-read',
                 MaxItems: 10
