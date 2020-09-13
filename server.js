@@ -40,10 +40,10 @@ app.post("/",  function(req,res){
                 const sendImages = await aws_controller.sendImages(i, 900);
 
                 url_images.push(sendImages);
-
-                res.json(url_images);
+                
             }
 
+            res.json(url_images);
         } catch (error) {
             console.log(error);
             return res.send({ status: 'error', message : error});
