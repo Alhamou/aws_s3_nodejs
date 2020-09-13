@@ -1,5 +1,5 @@
 const express = require("express");
-const aws_controller = require("./helper");
+const aws_controller = require("./aws_s3_helper");
 const fs = require("fs");
 const app = express();
 const formidable = require("formidable");
