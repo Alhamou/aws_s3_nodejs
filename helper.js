@@ -95,7 +95,7 @@ module.exports =  (function(){
      * @param {source Name} name 
      */
     obj.fileName = function(name){
-        return Date.now() + "_" + encodeURIComponent(name.replace(/&. *;+/gm, '_').replace(/-/gm, '_'));
+        return obj.date() + "_" + Date.now() + "_" + encodeURIComponent(name.replace(/&. *;+/gm, '_').replace(/-/gm, '_'));
     }
 
      /**

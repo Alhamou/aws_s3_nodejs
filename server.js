@@ -20,7 +20,7 @@ app.post("/",  function(req,res){
 
     form.on("fileBegin", function(name, file) {
                 
-        let local_name = AWSAPI.date() + "_" + AWSAPI.fileName(file.name);
+        let local_name = AWSAPI.fileName(file.name);
 
         files.push({ path: file.path, name : local_name});
 
