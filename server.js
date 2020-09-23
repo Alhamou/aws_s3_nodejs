@@ -3,7 +3,9 @@ const aws_controller = require("./aws_s3_helper");
 const fs = require("fs");
 const app = express();
 const formidable = require("formidable");
-
+const util = require('util');
+const exec = util.promisify(require('child_process').exec);
+const archiver = require('archiver');
 
 
 
@@ -62,26 +64,6 @@ app.post("/",  function(req,res){
 
 
 
-
-
-
-
-
-const cp = require('child_process');
-const { dirname } = require("path");
-
-
-// console.log(__dirname, __filename)
-
-
-
-
-
-
-
-const archiver = require('archiver');
-
-
 function zipDirectory(source, out) {
 
   const archive = archiver('zip', { zlib: { level: 9 }});
@@ -99,28 +81,23 @@ function zipDirectory(source, out) {
   });
 }
 
-const test = "emad";
+
 const dir = __dirname + "/dir"
 const zip = __dirname + "/zip/test.zip"
 
 
+async function serverFtp() {
 
-zipDirectory(dir, zip)
+    const zipFile = await zipDirectory(dir, zip);
+    const {stderr, stdout} = await exec(`server.sh ${zip}`);
+  
+    console.error(stderr, stdout);
 
-// cp file.doc newfile.doc
-
-// console.log(dir)
-// var text = fs.readFileSync('test.txt','utf8')
-// console.log (text)
+}
+  
+serverFtp()
 
 
-cp.exec(`server.sh ${zip}`,  function(err, stdout, stderr) {
-    console.log(err)
-    console.log(stdout)
-    console.log(stderr)
-
-    // handle err, stdout, stderr
-});
 
 app.get("sftp", function(req, res){
 
